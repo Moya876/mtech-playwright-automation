@@ -38,6 +38,20 @@ test('footer exposes working email and telephone link targets', async ({ page })
   await expect(footer.getByRole('link', { name: '876-833-1524' })).toHaveAttribute('href', 'tel:876-833-1524');
 });
 
+test('mobile menu closes after navigating to a page', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'Mobile-specific menu behavior');
+  const header = page.locator('header');
+
+  await page.goto('/');
+  await header.getByRole('button', { name: 'Toggle menu' }).click();
+  await expect(header.getByRole('link', { name: 'Services', exact: true }).filter({ visible: true })).toBeVisible();
+
+  await header.getByRole('link', { name: 'Services', exact: true }).filter({ visible: true }).click();
+  await expect(page).toHaveURL(/\/services\/?$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Our Services');
+  await expect(header.getByRole('button', { name: 'Toggle menu' })).toBeVisible();
+});
+
 test('main pages fit within the viewport', async ({ page }) => {
   for (const path of ['/', '/services', '/portfolio', '/contact', '/quote']) {
     await test.step(`check ${path}`, async () => {

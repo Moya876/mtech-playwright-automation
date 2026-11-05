@@ -41,6 +41,35 @@ test('portfolio search handles no matches', async ({ page }) => {
   await expect(page.getByText(/no projects found/i)).toBeVisible();
 });
 
+test('FAQ items can be opened and closed in sequence without leaving stale state', async ({ page }) => {
+  await page.goto('/');
+  const firstQuestion = page.getByRole('button', { name: 'What services does M Tech Corp offer?' });
+  const secondQuestion = page.getByRole('button', { name: 'How much does a website cost?' });
+
+  await firstQuestion.click();
+  await expect(firstQuestion).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByRole('region', { name: 'What services does M Tech Corp offer?' })).toBeVisible();
+
+  await secondQuestion.click();
+  await expect(secondQuestion).toHaveAttribute('aria-expanded', 'true');
+  await expect(firstQuestion).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.getByRole('region', { name: 'How much does a website cost?' })).toBeVisible();
+});
+
+test('main public routes respond successfully across the portfolio site', async ({ page }) => {
+  for (const { path, heading } of [
+    { path: '/', heading: 'Building Digital Solutions for Your Business' },
+    { path: '/services', heading: 'Our Services' },
+    { path: '/portfolio', heading: 'Our Portfolio' },
+    { path: '/contact', heading: 'Contact Us' },
+    { path: '/quote', heading: 'Get a Quote' },
+  ]) {
+    const response = await page.goto(path);
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
+  }
+});
+
 test('capture a portfolio demonstration screenshot', async ({ page }, testInfo) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
