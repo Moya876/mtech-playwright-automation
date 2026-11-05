@@ -2,6 +2,14 @@
 
 A TypeScript end-to-end testing project for [MTech Corp Jamaica](https://mtechcorpja.com), built as a QA automation portfolio piece. It tests how visitors discover services, browse projects, use FAQs, and receive enquiry-form validation feedback.
 
+## Test results
+
+The supplied Playwright report screenshot shows **81 passed, 0 failed, 0 flaky, and 3 skipped** in **3.4 minutes** on November 5, 2026. The three skipped cases correspond to the mobile-only scenario on desktop browser profiles.
+
+![Playwright HTML report showing 81 passed tests, zero failures, zero flaky tests, and three skipped cases](docs/images/playwright-test-results.png)
+
+The screenshot records a local run; GitHub Actions results are available on the repository's [Actions tab](https://github.com/Moya876/mtech-playwright-automation/actions).
+
 ## Run locally
 
 Install Node.js 24 LTS, then run:
@@ -41,9 +49,9 @@ On Linux, install browser system dependencies with `npx playwright install --wit
 
 There are 21 scenarios per project across desktop Chromium, Firefox, WebKit, and a Pixel 7 mobile Chromium profile (84 scheduled cases). One mobile-only scenario skips the three desktop profiles. Mobile coverage uses browser emulation, not a physical device. WebKit coverage is not a test on the Safari application itself.
 
-## Verified run
+## Run evidence
 
-On November 5, 2026, the original 16-scenario suite passed all 64 executions against the live site with Playwright 1.64.1. TypeScript validation (`npx tsc --noEmit`) also passed. Five additional scenarios from the Desktop copy were subsequently included; the earlier result does not cover those additions. These results describe that run; they are not a guarantee of the live site's future behavior.
+The screenshot above documents the expanded 21-scenario suite: 84 scheduled cases, with 81 passed and 3 skipped. The original 16-scenario suite also passed all 64 executions against the live site with Playwright 1.64.1 on November 5, 2026. TypeScript validation (`npx tsc --noEmit`) passed during project setup. Results describe the recorded runs; the live site's behavior can change.
 
 ## Design choices
 
@@ -61,7 +69,9 @@ tests/
   fixtures.ts          Shared read-only network guard
   navigation.spec.ts   Desktop/mobile navigation and layout
   content.spec.ts      Services, FAQ, search, screenshot evidence
-  forms.spec.ts        Invalid-form validation
+  forms.spec.ts        Form validation and corrected input
+docs/images/
+  playwright-test-results.png  Local run evidence shown above
 playwright.config.ts   Browser matrix, reports, timeouts, evidence
 .github/workflows/
   playwright.yml       CI run and downloadable report artifact
@@ -99,7 +109,7 @@ Open PowerShell in your Desktop project folder. Before editing, download remote 
 
 ```powershell
 git status
-git add tests README.md playwright.config.ts package.json package-lock.json tsconfig.json .gitignore .github
+git add tests docs README.md playwright.config.ts package.json package-lock.json tsconfig.json .gitignore .github
 git commit -m "Describe your changes"
 git push
 ```
